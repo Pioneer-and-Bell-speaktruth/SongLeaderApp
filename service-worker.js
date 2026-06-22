@@ -39,9 +39,19 @@ self.addEventListener("activate", event => {
 
 // Fetch: serve from cache first, then network
 self.addEventListener("fetch", event => {
+  const url = new URL(event.request.url);
+
+  // Do NOT cache Django API calls
+  if (url.pathname.startsWith("/assignments/api/")) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Cache-first for everything else
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request);
     })
   );
 });
+
