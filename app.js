@@ -7,12 +7,7 @@ async function loadAssignmentsForDate(year, month, day) {
     console.log("Fetching:", url);
 
     try {
-        const response = await fetch(url, {
-            // headers: {
-            //     "X-API-Key": "c4f9e8b2d7a14f0c9e3b5d2a8f6c1e4b7d9a2c3f5e8b1d4c6f0a2e9b7c3d1f5"
-            // }
-
-        });
+        const response = await fetch(url);
 
         console.log("Status:", response.status);
 
@@ -58,17 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
         dateInput.addEventListener("change", async function () {
             try {
                 const [year, month, day] = dateInput.value.split("-").map(Number);
-        
-                const url = `https://speaktruth.onrender.com/assignments/api/${year}/${month}/${day}/`;
-        
-                console.log("Fetching:", url);
-        
-                const response = await fetch(url);
-                const data = await response.json();
-        
-                displayAssignments(data.assignments);
-                fillAssignmentFields(data.assignments);
-        
+
+                const data = await loadAssignmentsForDate(year, month, day);
+
+                displayAssignments(data);
+                fillAssignmentFields(data);   // ⭐ Correct call
+
             } catch (err) {
                 console.error("Error during assignment load/display:", err);
             }
@@ -90,12 +80,9 @@ function displayAssignments(data) {
 
     container.innerHTML = "";
 
-    const assignments = data && data.assignments ? data.assignments : {};
+    const assignments = data.assignments || {};
 
-    // Show each assignment key/value
     for (const roleKey in assignments) {
-        if (!Object.prototype.hasOwnProperty.call(assignments, roleKey)) continue;
-
         const div = document.createElement("div");
         div.className = "assignment-item";
 
@@ -109,42 +96,10 @@ function displayAssignments(data) {
         container.appendChild(div);
     }
 
-    // Display notes if present
     if (Array.isArray(data.notes) && data.notes.length > 0) {
         const notesDiv = document.createElement("div");
         notesDiv.className = "assignment-notes";
         notesDiv.textContent = "Notes: " + data.notes.join(" | ");
         container.appendChild(notesDiv);
-    }
-}
-
-// ===============================
-// 5. Autofill Form Fields
-// ===============================
-function fillAssignmentFields(a) {
-    // Helper: safely fill a field if it exists
-    function safeFill(id, value) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.value = value || "";
-        }
-    }
-
-    // Roles that appear on ALL services
-    safeFill("openingprayer", a.opening_prayer);
-    safeFill("closingprayer", a.closing_prayer);
-
-    // Sunday Morning + Sunday Evening only
-    safeFill("scriptures", a.scriptures);
-    safeFill("preaching", a.preaching);
-
-    // Wednesday Evening only
-    safeFill("invitation", a.invitation);
-    safeFill("classteacher", a.bible_class);
-
-    // Notes (optional)
-    const notesBox = document.getElementById("notes");
-    if (notesBox && a.notes) {
-        notesBox.value = a.notes.join("\n");
     }
 }
