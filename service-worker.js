@@ -1,4 +1,4 @@
-const CACHE_NAME = "songleader-cache-v9";
+const CACHE_NAME = "songleader-cache-v10";
 
 const FILES_TO_CACHE = [
   "/SongLeaderApp/",
