@@ -321,9 +321,13 @@ function fillAssignmentFields(data) {
     }
             
     // Normal roles
-    safeFill("openingprayer", a.openingprayer);
-    safeFill("invitation", a.invitation);
-    safeFill("closingprayer", a.closingprayer);
+    safeFill("openingprayer", a.assignments.openingprayer);
+    safeFill("scriptures", a.assignments.scriptures);
+    safeFill("preaching", a.assignments.preaching);
+    safeFill("closingprayer", a.assignments.closingprayer);
+    safeFill("invitation", a.assignments.invitation);
+    safeFill("classteacher", a.assignments.classteacher);
+
             
     // ⭐ Handle Singing Night
     const noteBox = document.getElementById("service-note");
