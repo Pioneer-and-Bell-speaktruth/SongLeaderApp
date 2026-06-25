@@ -153,13 +153,26 @@ function copyToClipboard() {
 
 <input type="date" id="date">
 
-<div id="assignments"></div>
-
 <script src="app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const dateInput = document.getElementById("date");
+
+    dateInput.addEventListener("change", async () => {
+        const [year, month, day] = dateInput.value.split("-").map(Number);
+
+        const data = await loadAssignmentsForDate(year, month, day);
+
+        displayAssignments(data);     // shows list
+        fillAssignmentFields(data);   // fills the boxes
+    });
+});
+</script>
 
 <h1>SUNDAY MORNING</h1>
 
 <div id="song-list">
+<div id="assignments"></div>
 <!-- SONG 1 -->
 <div class="section-header">SONG 1</div>
 <div class="divider"></div>
@@ -332,7 +345,7 @@ for (let i = 1; i <= 7; i++) {
         </div>
     `);
 }
-function fillAssignmentFields(a) {
+function fillAssignmentFields(data) {
     function safeFill(id, value) {
         const el = document.getElementById(id);
         if (el) {
