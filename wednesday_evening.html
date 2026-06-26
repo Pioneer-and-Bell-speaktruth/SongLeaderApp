@@ -299,39 +299,37 @@ for (let i = 1; i <= 7; i++) {
         </div>
     `);
 }
-function fillAssignmentFields(data) {
+function fillAssignmentFields(a) {
     function safeFill(id, value) {
         const el = document.getElementById(id);
-        if (el) {
-            el.value = value || "";
-        }
+        if (el) el.value = value || "";
     }
-    const noteBox = document.getElementById("service-note");
 
-    // ⭐ Show the note (always)
+    // ⭐ Always show the note
+    const noteBox = document.getElementById("service-note");
     if (a.notes && a.notes.length > 0) {
         noteBox.textContent = a.notes.join(" | ");
     } else {
         noteBox.textContent = "";
     }
-        // ⭐ SPECIAL LOGIC FOR 2ND WEDNESDAY (SINGING NIGHT)
+
+    // ⭐ Fill all normal assignments
+    if (a.assignments) {
+        safeFill("openingprayer", a.assignments.openingprayer);
+        safeFill("scriptures", a.assignments.scriptures);
+        safeFill("preaching", a.assignments.preaching);
+        safeFill("closingprayer", a.assignments.closingprayer);
+        safeFill("invitation", a.assignments.invitation);
+        safeFill("classteacher", a.assignments.classteacher);
+    }
+
+    // ⭐ SPECIAL LOGIC FOR 2ND WEDNESDAY (SINGING NIGHT)
     const isSingingNight =
         a.notes &&
         a.notes.some(n => n.toLowerCase().includes("singing night"));
 
     if (isSingingNight) {
         safeFill("classteacher", "N/A");
-        return; // stop here — do NOT fill normal assignments
-    }
-    
-    // ⭐ FILL THE BOXES
-    if (data.assignments) {
-        safeFill("openingprayer", data.assignments.openingprayer);
-        safeFill("scriptures", data.assignments.scriptures);
-        safeFill("preaching", data.assignments.preaching);
-        safeFill("closingprayer", data.assignments.closingprayer);
-        safeFill("invitation", data.assignments.invitation);
-        safeFill("classteacher", data.assignments.classteacher);
     }
 }
 </script>
